@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <RestoreSuccess Condition=" '$(RestoreSuccess)' == '' ">True</RestoreSuccess>
+    <RestoreTool Condition=" '$(RestoreTool)' == '' ">NuGet</RestoreTool>
+    <ProjectAssetsFile Condition=" '$(ProjectAssetsFile)' == '' ">$(MSBuildThisFileDirectory)project.assets.json</ProjectAssetsFile>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
+    <NuGetPackageFolders Condition=" '$(NuGetPackageFolders)' == '' ">C:\Users\saiau\.nuget\packages\;C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages</NuGetPackageFolders>
+    <NuGetProjectStyle Condition=" '$(NuGetProjectStyle)' == '' ">PackageReference</NuGetProjectStyle>
+    <NuGetToolVersion Condition=" '$(NuGetToolVersion)' == '' ">7.0.0</NuGetToolVersion>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <SourceRoot Include="C:\Users\saiau\.nuget\packages\" />
+    <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\LICENSE" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\LICENSE')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\LICENSE</TargetPath>
+      <DestinationSubDirectory>ffmpeg\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\LICENSE</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\README.txt" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\README.txt')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\README.txt</TargetPath>
+      <DestinationSubDirectory>ffmpeg\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\README.txt</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avcodec-60.dll" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avcodec-60.dll')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\avcodec-60.dll</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\avcodec-60.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avdevice-60.dll" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avdevice-60.dll')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\avdevice-60.dll</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\avdevice-60.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avfilter-9.dll" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avfilter-9.dll')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\avfilter-9.dll</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\avfilter-9.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avformat-60.dll" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avformat-60.dll')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\avformat-60.dll</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\avformat-60.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avutil-58.dll" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\avutil-58.dll')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\avutil-58.dll</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\avutil-58.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\ffmpeg.exe" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\ffmpeg.exe')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\ffmpeg.exe</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\ffmpeg.exe</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\ffplay.exe" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\ffplay.exe')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\ffplay.exe</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\ffplay.exe</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\ffprobe.exe" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\ffprobe.exe')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\ffprobe.exe</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\ffprobe.exe</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\postproc-57.dll" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\postproc-57.dll')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\postproc-57.dll</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\postproc-57.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\swresample-4.dll" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\swresample-4.dll')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\swresample-4.dll</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\swresample-4.dll</Link>
+    </None>
+    <None Include="$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\swscale-7.dll" Condition="Exists('$(NuGetPackageRoot)ffmpeginstaller.windows.x64\0.1.10\contentFiles\any\netstandard2.1\ffmpeg\bin\swscale-7.dll')">
+      <NuGetPackageId>FFMpegInstaller.Windows.x64</NuGetPackageId>
+      <NuGetPackageVersion>0.1.10</NuGetPackageVersion>
+      <NuGetItemType>None</NuGetItemType>
+      <Pack>false</Pack>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>ffmpeg\bin\swscale-7.dll</TargetPath>
+      <DestinationSubDirectory>ffmpeg\bin\</DestinationSubDirectory>
+      <Private>True</Private>
+      <Link>ffmpeg\bin\swscale-7.dll</Link>
+    </None>
+  </ItemGroup>
+</Project>

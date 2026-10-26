@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "BwCDx5MZ7WA=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\saiau\\source\\repos\\TGChannelAgents\\VideoTelegramUploader\\VideoTelegramUploader.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\saiau\\.nuget\\packages\\anglesharp\\1.8.6\\anglesharp.1.8.6.nupkg.sha512",
+    "C:\\Users\\saiau\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.13\\microsoft.net.illink.tasks.10.0.13.nupkg.sha512",
+    "C:\\Users\\saiau\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\saiau\\.nuget\\packages\\telegram.bot\\19.0.0\\telegram.bot.19.0.0.nupkg.sha512",
+    "C:\\Users\\saiau\\.nuget\\packages\\microsoft.netcore.app.runtime.linux-x64\\10.0.13\\microsoft.netcore.app.runtime.linux-x64.10.0.13.nupkg.sha512",
+    "C:\\Users\\saiau\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.linux-x64\\10.0.13\\microsoft.aspnetcore.app.runtime.linux-x64.10.0.13.nupkg.sha512",
+    "C:\\Users\\saiau\\.nuget\\packages\\microsoft.netcore.app.host.linux-x64\\10.0.13\\microsoft.netcore.app.host.linux-x64.10.0.13.nupkg.sha512"
+  ],
+  "logs": []
+}
