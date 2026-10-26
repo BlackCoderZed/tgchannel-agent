@@ -1,3 +1,0 @@
-C:\Users\saiau\source\repos\TGChannelAgents\Release\Linux\VideoTelegramUploader.pdb
-C:\Users\saiau\source\repos\TGChannelAgents\Release\Linux\appsettings.json
-C:\Users\saiau\source\repos\TGChannelAgents\Release\Linux\VideoTelegramUploader
