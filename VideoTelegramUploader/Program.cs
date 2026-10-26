@@ -11,17 +11,11 @@
 //   4. Uploads it to the configured Telegram channel.
 //   5. Records every uploaded video in uploads.json to avoid duplicates.
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Dom;
 using Telegram.Bot;
@@ -45,6 +39,7 @@ public class TelegramConfig
 {
     public string BotToken { get; set; } = string.Empty;
     public long ChannelId { get; set; }
+    public string? LocalBotApiUrl { get; set; }
 }
 
 // ──── Upload record (persisted in uploads.json) ────
@@ -291,9 +286,9 @@ class Program
                          new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
                      ?? throw new InvalidOperationException("Invalid configuration");
 
-        if (string.IsNullOrWhiteSpace(config.Telegram.BotToken) || config.Telegram.ChannelId == 0)
+        if (string.IsNullOrWhiteSpace(config.Telegram.BotToken))
         {
-            Console.Error.WriteLine("Telegram BotToken or ChannelId not configured in appsettings.json.");
+            Console.Error.WriteLine("Telegram BotToken not configured in appsettings.json.");
             return 1;
         }
 
@@ -303,9 +298,34 @@ class Program
             return 1;
         }
 
-        // Use a long timeout HttpClient for Telegram uploads (10 minutes)
-        var telegramHttpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };
-        var botClient = new TelegramBotClient(config.Telegram.BotToken, telegramHttpClient);
+        // A self-hosted Bot API server accepts videos up to 2000 MB without recompression.
+        var localBotApiUrl = config.Telegram.LocalBotApiUrl?.Trim();
+        var useLocalBotApi = !string.IsNullOrWhiteSpace(localBotApiUrl);
+        var telegramHttpClient = new HttpClient
+        {
+            Timeout = useLocalBotApi ? TimeSpan.FromHours(2) : TimeSpan.FromMinutes(10)
+        };
+        var botClient = new TelegramBotClient(
+            new TelegramBotClientOptions(config.Telegram.BotToken, useLocalBotApi ? localBotApiUrl : null),
+            telegramHttpClient);
+
+        if (config.Telegram.ChannelId == 0)
+        {
+            try
+            {
+                var channelId = await DiscoverChannelIdAsync(botClient);
+                if (channelId == null) return 1;
+
+                await SaveChannelIdAsync(configPath, channelId.Value);
+                config.Telegram.ChannelId = channelId.Value;
+                Console.WriteLine($"[CONFIG] Saved ChannelId {channelId.Value} to {configPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"[CONFIG ERROR] Could not discover or save ChannelId: {ex.Message}");
+                return 1;
+            }
+        }
 
         var http = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
         http.DefaultRequestHeaders.UserAgent.ParseAdd(
@@ -323,6 +343,7 @@ class Program
         Console.WriteLine($"Configured websites : {config.Websites.Length}");
         Console.WriteLine($"Max pages per site  : {config.MaxPages}");
         Console.WriteLine($"Max videos per site : {config.MaxVideosPerSite}");
+        Console.WriteLine($"Telegram API        : {(useLocalBotApi ? "local (2000 MB upload limit)" : "public (50 MB upload limit)")}");
         Console.WriteLine($"Already uploaded     : {uploads.Count} video(s)");
         Console.WriteLine(new string('─', 60));
 
@@ -375,6 +396,7 @@ class Program
 
                 Console.WriteLine($"  [DOWNLOAD] {videoUrl}");
                 var tempFile = Path.Combine(Path.GetTempPath(), $"vtu_{Guid.NewGuid()}.mp4");
+                string? compressedFile = null;
                 try
                 {
                     // Build request with Referer header (some download servers require it)
@@ -406,21 +428,33 @@ class Program
 
                     } // fileStream and contentStream are closed here
 
-                    // Check file size – compress if over 49 MB (Telegram limit is 50 MB)
+                    // Public Bot API uploads are limited to 50 MB; leave a small margin.
+                    // The local Bot API server permits up to 2000 MB without quality loss.
                     var fileSize = new FileInfo(tempFile).Length;
                     var fileSizeMB = fileSize / 1048576.0;
                     var uploadFile = tempFile;
-                    string? compressedFile = null;
 
-                    if (fileSizeMB > 49)
+                    if (useLocalBotApi && fileSize > 2_000_000_000L)
+                    {
+                        Console.WriteLine($"  [WARN] File is {fileSizeMB:F1} MiB, above the local Bot API 2000 MB limit. Skipping.");
+                        continue;
+                    }
+
+                    if (!useLocalBotApi && fileSize > 49L * 1048576)
                     {
                         Console.WriteLine($"  [COMPRESS] File is {fileSizeMB:F1} MB – compressing with FFmpeg …");
                         compressedFile = Path.Combine(Path.GetTempPath(), $"vtu_{Guid.NewGuid()}_compressed.mp4");
                         var compressed = await CompressVideoAsync(tempFile, compressedFile, 49);
                         if (compressed)
                         {
-                            var compressedSize = new FileInfo(compressedFile).Length / 1048576.0;
+                            var compressedBytes = new FileInfo(compressedFile).Length;
+                            var compressedSize = compressedBytes / 1048576.0;
                             Console.WriteLine($"  [COMPRESS] Done – {compressedSize:F1} MB");
+                            if (compressedBytes > 49L * 1048576)
+                            {
+                                Console.WriteLine("  [WARN] Compressed video still exceeds the public Bot API upload limit. Skipping.");
+                                continue;
+                            }
                             uploadFile = compressedFile;
                         }
                         else
@@ -472,11 +506,8 @@ class Program
                 {
                     if (File.Exists(tempFile))
                         File.Delete(tempFile);
-                    // Clean up any compressed temp file
-                    foreach (var f in Directory.GetFiles(Path.GetTempPath(), "vtu_*_compressed.mp4"))
-                    {
-                        try { File.Delete(f); } catch { }
-                    }
+                    if (compressedFile != null && File.Exists(compressedFile))
+                        File.Delete(compressedFile);
                 }
             }
         }
@@ -488,6 +519,62 @@ class Program
         return 0;
     }
 
+    static async Task<long?> DiscoverChannelIdAsync(TelegramBotClient botClient)
+    {
+        Console.WriteLine("[CONFIG] ChannelId is missing. Checking channel posts received by the bot …");
+
+        var webhook = await botClient.GetWebhookInfoAsync();
+        if (!string.IsNullOrEmpty(webhook.Url))
+        {
+            Console.Error.WriteLine("[CONFIG ERROR] The bot uses a webhook, so getUpdates cannot discover a channel. Set ChannelId manually in appsettings.json.");
+            return null;
+        }
+
+        // No offset: inspecting updates must not acknowledge or discard other bot updates.
+        var updates = await botClient.GetUpdatesAsync(limit: 100, timeout: 15);
+        var channels = updates
+            .Where(update => update.ChannelPost != null)
+            .Select(update => update.ChannelPost!.Chat)
+            .GroupBy(chat => chat.Id)
+            .Select(group => group.First())
+            .ToList();
+
+        if (channels.Count == 1)
+            return channels[0].Id;
+
+        if (channels.Count == 0)
+            Console.Error.WriteLine("[CONFIG ERROR] No channel post found. Add the bot as a channel admin, publish a post, then restart. Or set ChannelId manually.");
+        else
+        {
+            Console.Error.WriteLine("[CONFIG ERROR] Posts from multiple channels were found. Set ChannelId manually to one of these:");
+            foreach (var channel in channels)
+                Console.Error.WriteLine($"  {channel.Id}: {channel.Title}");
+        }
+
+        return null;
+    }
+
+    static async Task SaveChannelIdAsync(string configPath, long channelId)
+    {
+        var root = JsonNode.Parse(await File.ReadAllTextAsync(configPath))
+            ?? throw new InvalidOperationException("Configuration is empty.");
+        var rootObject = root as JsonObject
+            ?? throw new InvalidOperationException("Configuration must be a JSON object.");
+        var telegram = rootObject
+            .FirstOrDefault(pair => string.Equals(pair.Key, "Telegram", StringComparison.OrdinalIgnoreCase))
+            .Value as JsonObject
+            ?? throw new InvalidOperationException("Telegram configuration is missing.");
+        var channelIdKey = telegram
+            .Select(pair => pair.Key)
+            .FirstOrDefault(key => string.Equals(key, "ChannelId", StringComparison.OrdinalIgnoreCase))
+            ?? "ChannelId";
+        telegram[channelIdKey] = channelId;
+
+        // Write the existing file so its permissions remain unchanged (it contains the bot token).
+        await File.WriteAllTextAsync(configPath,
+            root.ToJsonString(new JsonSerializerOptions { WriteIndented = true }));
+    }
+
     /// <summary>
     /// Compresses a video file using FFmpeg to fit within the target size in MB.
     /// </summary>
@@ -497,14 +584,16 @@ class Program
         {
             var ffprobe = GetFfmpegExecutable("ffprobe");
             var ffmpeg = GetFfmpegExecutable("ffmpeg");
-            if (!await IsAvailableAsync(ffprobe) || !await IsAvailableAsync(ffmpeg))
+            var probeAvailable = await IsAvailableAsync(ffprobe);
+            var ffmpegAvailable = await IsAvailableAsync(ffmpeg);
+            if (!probeAvailable || !ffmpegAvailable)
             {
-                Console.Error.WriteLine("  [COMPRESS ERROR] FFmpeg and ffprobe are required. On Linux, install FFmpeg and ensure both commands are on PATH.");
+                Console.Error.WriteLine("  [COMPRESS ERROR] FFmpeg and ffprobe are required. Install them on Linux or place both executables in the published app's ffmpeg/bin directory.");
                 return false;
             }
 
             // Get video duration first
-            var durationProcess = new Process
+            using var durationProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -518,7 +607,14 @@ class Program
             };
             durationProcess.Start();
             var durationOutput = await durationProcess.StandardOutput.ReadToEndAsync();
+            var durationError = durationProcess.StandardError.ReadToEndAsync();
             await durationProcess.WaitForExitAsync();
+            if (durationProcess.ExitCode != 0)
+            {
+                Console.Error.WriteLine($"  [COMPRESS ERROR] ffprobe exited with code {durationProcess.ExitCode}: { (await durationError).Trim() }");
+                return false;
+            }
+            await durationError;
 
             if (!double.TryParse(durationOutput.Trim(), System.Globalization.NumberStyles.Any,
                     System.Globalization.CultureInfo.InvariantCulture, out var durationSeconds) || durationSeconds <= 0)
@@ -534,13 +630,13 @@ class Program
 
             Console.WriteLine($"  [COMPRESS] Duration: {durationSeconds:F0}s, Target video bitrate: {videoBitrateKbps} kbps");
 
-            var ffmpegProcess = new Process
+            using var ffmpegProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = ffmpeg,
                     Arguments = $"-y -i \"{inputPath}\" -c:v libx264 -b:v {videoBitrateKbps}k -c:a aac -b:a {audioBitrateKbps}k -preset fast -movflags +faststart \"{outputPath}\"",
-                    RedirectStandardOutput = true,
+                    RedirectStandardOutput = false,
                     RedirectStandardError = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
@@ -549,18 +645,28 @@ class Program
             ffmpegProcess.Start();
 
             // Read stderr (FFmpeg outputs progress to stderr)
-            _ = Task.Run(async () =>
+            var recentErrors = new Queue<string>();
+            var stderrTask = Task.Run(async () =>
             {
                 using var reader = ffmpegProcess.StandardError;
                 while (await reader.ReadLineAsync() is { } line)
                 {
                     if (line.Contains("frame=") || line.Contains("time="))
                         Console.Write($"\r  [COMPRESS] {line.Trim()[..Math.Min(line.Trim().Length, 80)]}   ");
+                    else if (!string.IsNullOrWhiteSpace(line))
+                    {
+                        if (recentErrors.Count == 8) recentErrors.Dequeue();
+                        recentErrors.Enqueue(line);
+                    }
                 }
             });
 
             await ffmpegProcess.WaitForExitAsync();
+            await stderrTask;
             Console.WriteLine();
+
+            if (ffmpegProcess.ExitCode != 0)
+                Console.Error.WriteLine($"  [COMPRESS ERROR] ffmpeg exited with code {ffmpegProcess.ExitCode}: {string.Join(" | ", recentErrors)}");
 
             return ffmpegProcess.ExitCode == 0 && File.Exists(outputPath) && new FileInfo(outputPath).Length > 0;
         }
@@ -571,9 +677,17 @@ class Program
         }
     }
 
-    static string GetFfmpegExecutable(string name) => OperatingSystem.IsWindows()
-        ? Path.Combine(AppContext.BaseDirectory, "ffmpeg", "bin", name + ".exe")
-        : name;
+    static string GetFfmpegExecutable(string name)
+    {
+        var executableName = OperatingSystem.IsWindows() ? name + ".exe" : name;
+        var bundledPath = Path.Combine(AppContext.BaseDirectory, "ffmpeg", "bin", executableName);
+        if (File.Exists(bundledPath)) return bundledPath;
+
+        var besideAppPath = Path.Combine(AppContext.BaseDirectory, executableName);
+        if (File.Exists(besideAppPath)) return besideAppPath;
+
+        return executableName; // Resolve from PATH.
+    }
 
     static async Task<bool> IsAvailableAsync(string executable)
     {
