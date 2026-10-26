@@ -1,4 +1,4 @@
-// VideoTelegramUploader - Scrapes configured websites for video URLs and uploads them to Telegram.
+// allgabar-web-tg-uploader - Scrapes configured websites for video URLs and uploads them to Telegram.
 //
 // Configuration (appsettings.json):
 //   "Telegram": { "BotToken": "...", "ChannelId": -1001234567890 }
@@ -23,7 +23,7 @@ using Telegram.Bot;
 using File = System.IO.File;
 using InputFile = Telegram.Bot.Types.InputFile;
 
-namespace VideoTelegramUploader;
+namespace AllgabarWebTgUploader;
 
 // ──── Configuration models ────
 

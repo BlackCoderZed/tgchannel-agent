@@ -35,4 +35,4 @@ ffmpeg -version
 ffprobe -version
 ```
 
-The account running the uploader must be able to execute both commands. Alternatively, place executable Linux binaries at `ffmpeg/bin/ffmpeg` and `ffmpeg/bin/ffprobe` beside the published `VideoTelegramUploader` file. The app also checks for binaries directly beside itself, then falls back to `PATH`. A failed compression now prints the relevant FFmpeg error. If `LocalBotApiUrl` is configured, the app uploads without FFmpeg.
+The account running the uploader must be able to execute both commands. Alternatively, place executable Linux binaries at `ffmpeg/bin/ffmpeg` and `ffmpeg/bin/ffprobe` beside the published `allgabar-web-tg-uploader` file. The app also checks for binaries directly beside itself, then falls back to `PATH`. A failed compression now prints the relevant FFmpeg error. If `LocalBotApiUrl` is configured, the app uploads without FFmpeg.
