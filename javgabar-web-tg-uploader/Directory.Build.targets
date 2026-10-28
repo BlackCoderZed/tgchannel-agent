@@ -1,0 +1,5 @@
+<Project>
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT' And ('$(RuntimeIdentifier)' == '' Or '$(RuntimeIdentifier)' == 'win-x64')">
+    <PackageReference Include="FFMpegInstaller.Windows.x64" Version="0.1.10" />
+  </ItemGroup>
+</Project>
