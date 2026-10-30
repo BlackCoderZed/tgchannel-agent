@@ -2,4 +2,5 @@
   <Project Path="allgabar-web-tg-uploader/allgabar-web-tg-uploader.csproj" />
   <Project Path="javgabar-web-tg-uploader/javgabar-web-tg-uploader.csproj" />
   <Project Path="buumal-web-tg-uploader/buumal-web-tg-uploader.csproj" />
+  <Project Path="homietv-web-tg-uploader/homietv-web-tg-uploader.csproj" />
 </Solution>

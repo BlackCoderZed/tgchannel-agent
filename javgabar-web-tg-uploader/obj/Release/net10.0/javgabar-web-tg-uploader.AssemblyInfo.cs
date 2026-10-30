@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("javgabar-web-tg-uploader")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9bbadf4bd1c7fbfc3a55cd1a460bce55f9045b81")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+42e928d65bead2960cc997fc5d06cecede83b18f")]
 [assembly: System.Reflection.AssemblyProductAttribute("javgabar-web-tg-uploader")]
 [assembly: System.Reflection.AssemblyTitleAttribute("javgabar-web-tg-uploader")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
